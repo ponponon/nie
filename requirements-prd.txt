@@ -1,0 +1,4 @@
+minio
+loguru
+pydantic
+pyyaml

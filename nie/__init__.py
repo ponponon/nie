@@ -1,0 +1,2 @@
+def nopen():
+    pass
