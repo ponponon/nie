@@ -20,3 +20,9 @@ The following distributed file systems are supported:
 Other Features:
 
 - python3.10+
+
+# TODO list
+
+- read 支持 size
+- read 支持 readline、readlines
+- 集成 filetype 支持
