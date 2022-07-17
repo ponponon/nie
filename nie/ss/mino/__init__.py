@@ -2,8 +2,9 @@ from nie.aliases import pyminio
 from nie.loggers import logger
 import io
 from typing import overload
+from typing import Generator
 from urllib3.response import HTTPResponse
-
+from nie.aliases import pyminio
 
 from typing import overload, TypeAlias, Literal
 
@@ -173,6 +174,47 @@ class MinioTextFileReader(MinioBaseFileReader):
             bucket_name=self.client.bucket_name,
             object_name=self.client.file_path,
         )
-        object.data
-
         return object.data.decode(self.client.encoding)
+
+    def readline(self, block_size: int = 2048) -> Generator[str, None, None]:
+        def get_block(offset: int = 0, block_size: int = 2048) -> str | None:
+            try:
+                object: HTTPResponse = self.client.conn.get_object(
+                    bucket_name=self.client.bucket_name,
+                    object_name=self.client.file_path,
+                    offset=offset,
+                    length=block_size
+                )
+                return object.data.decode(self.client.encoding)
+            except pyminio.S3Error as error:
+                return None
+
+        def parse(content: str, ass: str) -> tuple[list[str], str]:
+            content=content if content else ''
+            ass=ass if ass else ''
+            _rows = (ass+content).split('\n')
+
+            if len(_rows) == 1:
+                _safe_rows = []
+                ass = _rows[-1]
+            else:
+                _safe_rows = _rows[:-1]
+                ass = _rows[-1]
+            return _safe_rows, ass
+
+        rows: list[str] = []
+        ass = ''
+
+        offset = 0
+
+        while True:
+            if rows:
+                yield rows[0]
+            else:
+                content = get_block(offset, block_size)
+                offset += block_size
+                if not content:
+                    yield ass
+                    return None
+                _rows, ass = parse(content, ass)
+                rows.extend(_rows)

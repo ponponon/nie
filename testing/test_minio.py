@@ -1,15 +1,13 @@
 from minio import Minio
 from minio.error import S3Error
 from mark import BASE_DIR
-from utils.image_helpers import *
 import unittest
 from loguru import logger
 from mark import BASE_DIR
 from pathlib import Path
-from PIL import Image
-from PIL.Image import Image as PIL_Image
 import sys
 import io
+from urllib3.response import HTTPResponse
 
 
 class TestMinio(unittest.TestCase):
@@ -52,3 +50,24 @@ class TestMinio(unittest.TestCase):
             length=len(png_stream),
             content_type='image/png'
         )
+
+    def test_get_object(self):
+        """
+        python -m unittest testing.test_minio.TestMinio.test_get_object
+        """
+        client = Minio(
+            "192.168.31.245:9000",
+            # "192.168.26.174:9000",
+            access_key="ponponon",
+            secret_key="ponponon",
+            secure=False
+        )
+
+        object: HTTPResponse = client.get_object(
+            'nie', 'test/001.txt', 
+            offset=15, 
+            length=1000
+            )
+        
+        logger.debug(object.data)
+        logger.debug(len(object.data))

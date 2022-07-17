@@ -11,8 +11,8 @@ The following storage services are supported:
 - [cos](https://cloud.tencent.com/product/cos)
 - [obs](https://www.huaweicloud.com/product/obs.html)
 
-
 The following distributed file systems are supported:
+
 - Local Hard Drive
 - [hdfs](https://hadoop.apache.org/docs/r1.2.1/hdfs_design.html)
 - [fastdfs](https://github.com/happyfish100/fastdfs)
