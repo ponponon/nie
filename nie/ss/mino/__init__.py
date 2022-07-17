@@ -53,17 +53,17 @@ class MinioClient:
             )
         return MinioTextFileWriter(self)
 
-    @overload
-    def open(self, file_path: str, mode: READ_TEXT_MODE, encoding: str = 'utf-8'):
-        self.file_path = file_path
-        assert mode == 'r'
-        self.conn = pyminio.Minio(
-            self.end_point,
-            access_key=self.access_key,
-            secret_key=self.secret_key,
-            secure=False
-        )
-        return MinioTextFileReader(self)
+    # @overload
+    # def open(self, file_path: str, mode: READ_TEXT_MODE, encoding: str = 'utf-8'):
+    #     self.file_path = file_path
+    #     assert mode == 'r'
+    #     self.conn = pyminio.Minio(
+    #         self.end_point,
+    #         access_key=self.access_key,
+    #         secret_key=self.secret_key,
+    #         secure=False
+    #     )
+    #     return MinioTextFileReader(self)
 
     @overload
     def open(self, file_path: str, mode: WRITE_STREAM_MODE):
@@ -134,27 +134,27 @@ class MinioStreamFileWriter(MinioBaseFileWriter):
         logger.debug(kwargs)
 
 
-class MinioBaseFileReader:
-    def __init__(self, client: MinioClient) -> None:
-        self.client = client
+# class MinioBaseFileReader:
+#     def __init__(self, client: MinioClient) -> None:
+#         self.client = client
 
-    def __enter__(self):
-        return self
+#     def __enter__(self):
+#         return self
 
-    def __exit__(self, *args, **kwargs):
-        pass
+#     def __exit__(self, *args, **kwargs):
+#         pass
 
 
-class MinioTextFileReader(MinioBaseFileReader):
+# class MinioTextFileReader(MinioBaseFileReader):
 
-    def read(self) -> str:
-        object = self.client.conn.get_object(
-            bucket_name=self.client.bucket_name,
-            object_name=self.client.file_path,
-        )
-        object.data
+#     def read(self) -> str:
+#         object = self.client.conn.get_object(
+#             bucket_name=self.client.bucket_name,
+#             object_name=self.client.file_path,
+#         )
+#         object.data
 
-        from nie.loggers import logger
-        logger.debug(type(object))
-        logger.debug(type(object.data))
-        logger.debug(type(object.stream))
+#         from nie.loggers import logger
+#         logger.debug(type(object))
+#         logger.debug(type(object.data))
+#         logger.debug(type(object.stream))
