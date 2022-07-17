@@ -11,14 +11,16 @@ client = MinioClient(
     bucket_name='nie',
 )
 
-with client.open('test/001.txt', 'w', encoding='utf-8') as file:
-    logger.debug(f'开始写入')
-    file.write('你好呀')
-    
-    
-# with client.open('test/001.txt', 'r', encoding='utf-8') as file:
-#     logger.debug(f'开始读取')
-#     file.read()
+# with client.open('test/001.txt', 'w', encoding='utf-8') as file:
+#     logger.debug(f'开始写入')
+#     file.write('你好呀哈哈')
+
+
+with client.open('test/001.txt', 'r', encoding='utf-8') as file:
+    logger.debug(f'开始读取')
+    text = file.read()
+
+    logger.debug(text)
 
 # with client.open('test/001.jpg', 'wb') as file:
 #     logger.debug(f'开始写入')

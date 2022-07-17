@@ -2,6 +2,7 @@ from nie.aliases import pyminio
 from nie.loggers import logger
 import io
 from typing import overload
+from urllib3.response import HTTPResponse
 
 
 from typing import overload, TypeAlias, Literal
@@ -30,6 +31,15 @@ APPEND_STREAM_MODE: TypeAlias = Literal[
     "ab",
 ]
 
+IO_MODE: TypeAlias = Literal[
+    READ_TEXT_MODE,
+    WRITE_TEXT_MODE,
+    APPEND_TEXT_MODE,
+    READ_STREAM_MODE,
+    WRITE_STREAM_MODE,
+    APPEND_STREAM_MODE
+]
+
 
 class MinioClient:
     def __init__(self, end_point: str, access_key: str, secret_key: str, bucket_name: str) -> None:
@@ -37,9 +47,6 @@ class MinioClient:
         self.access_key = access_key
         self.secret_key = secret_key
         self.bucket_name = bucket_name
-        
-    # def open(self, file_path: str, mode: str, encoding: str = 'utf-8'):
-    #     raise Exception(f'无效的 mode: {mode}')
 
     @overload
     def open(self, file_path: str, mode: WRITE_TEXT_MODE, encoding: str = 'utf-8'):
@@ -53,17 +60,17 @@ class MinioClient:
             )
         return MinioTextFileWriter(self)
 
-    # @overload
-    # def open(self, file_path: str, mode: READ_TEXT_MODE, encoding: str = 'utf-8'):
-    #     self.file_path = file_path
-    #     assert mode == 'r'
-    #     self.conn = pyminio.Minio(
-    #         self.end_point,
-    #         access_key=self.access_key,
-    #         secret_key=self.secret_key,
-    #         secure=False
-    #     )
-    #     return MinioTextFileReader(self)
+    @overload
+    def open(self, file_path: str, mode: READ_TEXT_MODE, encoding: str = 'utf-8'):
+        self.file_path = file_path
+        assert mode == 'r'
+        self.conn = pyminio.Minio(
+            self.end_point,
+            access_key=self.access_key,
+            secret_key=self.secret_key,
+            secure=False
+        )
+        return MinioTextFileReader(self)
 
     @overload
     def open(self, file_path: str, mode: WRITE_STREAM_MODE):
@@ -77,7 +84,21 @@ class MinioClient:
             )
         return MinioStreamFileWriter(self)
 
-    
+    def open(self, file_path: str, mode: str, encoding: str = 'utf-8'):
+        self.file_path = file_path
+        self.mod = mode
+        self.encoding = encoding
+
+        self.conn = pyminio.Minio(
+            self.end_point,
+            access_key=self.access_key,
+            secret_key=self.secret_key,
+            secure=False
+        )
+        if mode == 'w':
+            return MinioTextFileWriter(self)
+        elif mode == 'r':
+            return MinioTextFileReader(self)
 
 
 class MinioBaseFileWriter:
@@ -134,27 +155,24 @@ class MinioStreamFileWriter(MinioBaseFileWriter):
         logger.debug(kwargs)
 
 
-# class MinioBaseFileReader:
-#     def __init__(self, client: MinioClient) -> None:
-#         self.client = client
+class MinioBaseFileReader:
+    def __init__(self, client: MinioClient) -> None:
+        self.client = client
 
-#     def __enter__(self):
-#         return self
+    def __enter__(self):
+        return self
 
-#     def __exit__(self, *args, **kwargs):
-#         pass
+    def __exit__(self, *args, **kwargs):
+        pass
 
 
-# class MinioTextFileReader(MinioBaseFileReader):
+class MinioTextFileReader(MinioBaseFileReader):
 
-#     def read(self) -> str:
-#         object = self.client.conn.get_object(
-#             bucket_name=self.client.bucket_name,
-#             object_name=self.client.file_path,
-#         )
-#         object.data
+    def read(self) -> str:
+        object: HTTPResponse = self.client.conn.get_object(
+            bucket_name=self.client.bucket_name,
+            object_name=self.client.file_path,
+        )
+        object.data
 
-#         from nie.loggers import logger
-#         logger.debug(type(object))
-#         logger.debug(type(object.data))
-#         logger.debug(type(object.stream))
+        return object.data.decode(self.client.encoding)
