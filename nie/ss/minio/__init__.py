@@ -78,11 +78,11 @@ class MinioClient:
         pass
 
     def open(self, file_path: str, mode: str, encoding: str = 'utf-8'):
-        
+
         file_status = MinioFileStatus(
             file_path=file_path, mode=mode, encoding=encoding)
 
         if mode == 'w':
-            return MinioTextFileWriter(self)
+            return MinioTextFileWriter(status=self.status, file_status=file_status)
         elif mode == 'r':
-            return MinioTextFileReader(self)
+            return MinioTextFileReader(status=self.status, file_status=file_status)
