@@ -26,3 +26,26 @@ Other Features:
 
 - Check out the documentation.
 
+
+
+# examples
+
+```python
+from nie.ss.minio import MinioClient
+from loguru import logger
+
+client = MinioClient(
+    end_point='192.168.31.1:9000',
+    access_key='ak',
+    secret_key='sk',
+    bucket_name='nie',
+)
+
+
+with client.open('tweets/en32tge57626gh372eb.txt', 'r', encoding='utf-8') as file:
+    logger.debug(file.read())
+
+has_obj: bool = client.os.path.exists('tweets/en32tge57626gh372eb.txt'')
+
+logger.debug(has_obj)
+```

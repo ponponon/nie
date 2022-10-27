@@ -1,5 +1,4 @@
-from typing import overload
+name = 'nie'
 
-
-def nopen(file_path:str,mode):
-    pass
+__version__ = '0.0.1'
+VERSION = __version__
