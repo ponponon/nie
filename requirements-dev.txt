@@ -2,3 +2,4 @@ ipython
 autopep8
 psutil
 pylint
+twine
