@@ -5,7 +5,7 @@ with open("README.md", "r") as f:
 
 setuptools.setup(
     name="pynie",
-    version="0.0.1",
+    version="0.0.2",
     author="ponponon",
     author_email="1729303158@qq.com",
     maintainer='ponponon',
