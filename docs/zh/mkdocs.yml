@@ -1,0 +1,11 @@
+site_name: NIE
+theme:
+  name: material
+repo_name: ponponon/nie
+repo_url: https://github.com/ponponon/nie
+nav:
+  # - NIE: index.md
+  - minio:
+      - 桶操作: minio/bucket.md
+      - 路径操作: minio/path.md
+      - 文件(对象)操作: minio/object.md
