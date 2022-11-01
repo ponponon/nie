@@ -30,7 +30,7 @@ class MinioTextFileWriter(MinioBaseFileWriter):
 
 class MinioTextFileReader(MinioBaseFileReader):
 
-    def read(self) -> str:
+    def read(self, size: int | None = None) -> str:
         object: HTTPResponse = self.status.conn.get_object(
             bucket_name=self.status.bucket_name,
             object_name=self.file_status.file_path,
