@@ -1,12 +1,4 @@
-from nie.aliases import pyminio
-from nie.loggers import logger
-import io
-from typing import overload
-from typing import Generator
-from urllib3.response import HTTPResponse
-from nie.aliases import pyminio
 from datetime import datetime
-from typing import overload, TypeAlias, Literal
 from nie.ss.minio.core import MinioStatus
 
 
@@ -15,7 +7,7 @@ class MinioPathHandler:
         self.status = status
 
     def exists(self, file_path: str) -> bool:
-        for obj in self.status.conn.list_objects(
+        for _ in self.status.conn.list_objects(
                 self.status.bucket_name, prefix=file_path):
             return True
         return False

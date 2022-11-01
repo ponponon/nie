@@ -1,14 +1,9 @@
-from nie.aliases import pyminio
-from nie.loggers import logger
 import io
-from typing import overload
 from typing import Generator
 from urllib3.response import HTTPResponse
-from nie.aliases import pyminio
-from datetime import datetime
-from typing import overload, TypeAlias, Literal
 from nie.ss.minio.core import MinioStatus, MinioFileStatus
-from nie.ss.minio.file import MinioBaseFileWriter,MinioBaseFileReader
+from nie.ss.minio.file import MinioBaseFileWriter, MinioBaseFileReader
+
 
 class MinioTextFileWriter(MinioBaseFileWriter):
     def __init__(self, status: MinioStatus, file_status: MinioFileStatus) -> None:
@@ -31,7 +26,8 @@ class MinioTextFileWriter(MinioBaseFileWriter):
 
     def __exit__(self, *args, **kwargs):
         pass
-        
+
+
 class MinioTextFileReader(MinioBaseFileReader):
 
     def read(self) -> str:
