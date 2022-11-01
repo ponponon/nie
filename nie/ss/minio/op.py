@@ -20,24 +20,6 @@ class MinioPathHandler:
             return True
         return False
 
-        # result:Generator=self.status.conn.list_objects(
-        #     self.status.bucket_name, prefix=file_path)
-
-        # logger.debug(next(result))
-        # logger.debug(result.send(None))
-        # logger.debug(result.next())
-
-        # result:list[str] = list(
-
-        # )
-
-        # logger.debug(result)
-        # logger.debug(type(result))
-
-        # result = self.bucket.list_objects(object_file_path, max_keys=1)
-        # object_list: list[SimplifiedObjectInfo] = result.object_list
-        # return bool(object_list)
-
     def getctime(self, file_path: str) -> datetime:
         """ 返回文件 path 创建时间 """
         pass
@@ -63,7 +45,13 @@ class MinioOSHandler:
         self.status = status
 
     @property
-    def path(self):
+    def path(self) -> MinioPathHandler:
         if not self._path:
             self._path = MinioPathHandler(self.status)
         return self._path
+
+    def listdir(self, file_path: str):
+        return self.status.conn.list_objects(
+            self.status.bucket_name,
+            prefix=file_path
+        )

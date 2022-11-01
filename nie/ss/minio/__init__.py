@@ -3,9 +3,6 @@ from nie.ss.minio.stream import MinioStreamFileWriter
 from nie.ss.minio.text import MinioTextFileWriter, MinioTextFileReader
 from nie.ss.minio.core import MinioStatus
 from nie.ss.minio.core import MinioFileStatus
-from nie.aliases import pyminio
-from nie.loggers import logger
-import io
 from typing import overload
 from typing import Generator
 from urllib3.response import HTTPResponse
@@ -58,6 +55,14 @@ class MinioClient:
         return self._os
 
     def __init__(self, end_point: str, access_key: str, secret_key: str, bucket_name: str) -> None:
+        """
+        client = MinioClient(
+            end_point='192.168.31.100:9000',
+            access_key='your_access_key',
+            secret_key='your_secret_key',
+            bucket_name='your_bucket_name',
+        )
+        """
         self.status = MinioStatus(
             end_point=end_point,
             access_key=access_key,

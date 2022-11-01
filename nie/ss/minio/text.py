@@ -30,8 +30,7 @@ class MinioTextFileWriter(MinioBaseFileWriter):
         return self
 
     def __exit__(self, *args, **kwargs):
-        logger.debug(args)
-        logger.debug(kwargs)
+        pass
         
 class MinioTextFileReader(MinioBaseFileReader):
 
